@@ -1,0 +1,49 @@
+<html>
+<head>
+    <style>
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <img id="ryu" src="ryu-hurricane-ts.gif" style="border: 0px solid red" />
+    <audio id="audio" src="hadouryu.wav" preload="none"></audio>
+    <script>
+        var ryu = document.getElementById('ryu');
+        var audio = document.getElementById('audio');
+        document.addEventListener('load', function () {
+            var ryu = document.getElementById('ryu');
+            var width = 156;
+            ryu.style.position = 'absolute';
+            ryu.style.top = '50%';
+            var currLeft = 0 - width;
+            var playTime = 0;
+            ryu.style.left = `${currLeft}px`;
+            //ryu.style.left = `-100px`;
+
+            function move() {
+                currLeft += 20;
+                ryu.style.left = `${currLeft}px`;
+
+                if (currLeft >= window.innerWidth)
+                    return;
+                setTimeout(move, 100);
+            }
+
+            function play() {
+                playTime++;
+                audio.play();
+
+                if (playTime > 3) return;
+                setTimeout(play, 2000);
+            }
+
+            setTimeout(play, 500);
+            move();
+        }, true)
+
+    </script>
+</body>
+
+</html>
