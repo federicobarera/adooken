@@ -1,18 +1,221 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Permanent+Marker" rel="stylesheet">
     <style>
         body {
-            overflow: hidden;
-        }
+  color: white;
+  background-color: black;
+  font-family: "Press Start 2P", monospace;
+  font-size: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0;
+  overflow: hidden;
+}
+
+body:before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  background: repeating-linear-gradient(#0D122B, #0D122B 2px, #565B73 2px, #565B73 4px);
+  opacity: 0.2;
+  z-index: 100;
+  content: "";
+  pointer-events: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1 {
+  margin: 0;
+}
+
+.splash-screen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.title {
+  margin: auto;
+  font-family: "Permanent Marker", monospace;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 40vh;
+  font-size: 2rem;
+  line-height: 0.75;
+  word-break: break-word;
+  max-width: 500px;
+}
+
+.title h1 {
+  background: -webkit-linear-gradient(rgb(255, 18, 18) 30%, rgb(255, 215, 38));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.title-top {
+  transform: skew(-10deg) rotate(-10deg) translateX(-2rem);
+}
+
+.title-bottom {
+  transform: skew(-10deg) rotate(-10deg) translateX(1rem);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 50vh;
+  margin: auto;
+}
+
+.buttons a {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  height: 10vh;
+}
+
+.credit {
+  margin-top: 10px;
+  pointer-events: none;
+}
+
+.grey-with-red {
+  color: rgb(192, 192, 192);
+  text-shadow: 2px 2px 0 rgb(192, 11, 11);
+}
+
+.purple-with-blue {
+  color: rgb(147, 154, 255);
+  text-shadow: 2px 2px 0 rgb(47, 61, 255);
+  cursor: pointer;
+}
+
+.yellow-with-darkyellow {
+  color: rgb(226, 179, 24);
+  text-shadow: 0 2px 0 rgb(107, 77, 11), 2px 0 0 rgb(151, 109, 19),
+    2px 2px 0 rgb(151, 109, 19);
+}
+
+.yellow {
+  color: rgb(226, 179, 24);
+}
+
+.big {
+  font-size: 6rem;
+}
+
+@media (min-width: 400px) {
+  body {
+    font-size: 1.2rem;
+  }
+
+  .big {
+    font-size: 7rem;
+  }
+}
+
+@media (min-width: 600px) {
+  .big {
+    font-size: 9rem;
+  }
+
+  .title {
+    font-size: 3rem;
+    height: 50vh;
+  }
+
+  .buttons {
+    height: 40vh;
+  }
+
+  .title-top {
+    transform: skew(-10deg) rotate(-10deg) translateX(-2rem);
+  }
+
+  .title-bottom {
+    transform: skew(-10deg) rotate(-10deg) translateX(3rem);
+  }
+}
+
+@media (min-width: 800px) {
+  .credit {
+    position: absolute;
+    right: 50px;
+    margin-top: 0;
+  }
+}
+
+/* Stole this idea from twilioquest, it's freaking sick. */
+.load {
+  animation: load 800ms 500ms backwards;
+}
+
+@keyframes load {
+  0% {
+    filter: blur(2px) hue-rotate(-150deg);
+  }
+}
+
+::selection {
+  background: #b4fdff;
+}
+
+::-moz-selection {
+  background: #b4fdff;
+}
+
     </style>
 </head>
 <body>
+    <section class="splash-screen load">
+        <div class="title">
+          <h1 class="title-top"><span class="big">H</span>adouken</h1>
+          
+        </div>
+    
+        <div class="buttons grey-with-red">
+          <a id="start" class="purple-with-blue">Push start button</a>
+        </div>
+
+        <div class="bottom">
+            <a href="https://codepen.io/toomuchome/pen/QZPYqm" target="_blank">
+              <span class="yellow">©</span>
+              <span class="yellow-with-darkyellow"> LINXEA 2018</span></a>
+              <div class="credit grey-with-red">Credit <span class="yellow-with-darkyellow">1</span></div>
+        </div>
+
+    </section>
     <img id="ryu" src="ryu-hurricane-ts.gif" style="border: 0px solid red" />
-    <audio id="audio" src="hadouryu.wav" preload="none"></audio>
+    <audio id="audio" src="hadouryu.wav" preload="none" ></audio>
+    <button id="start" class="start">Start</button>
     <script>
         var ryu = document.getElementById('ryu');
         var audio = document.getElementById('audio');
-        document.addEventListener('load', function () {
+        var start = document.getElementById('start');
+
+        var videoLoop = undefined;
+        var audioLoop = undefined;
+        start.addEventListener('click', () => {
+            clearTimeout(videoLoop);
+            clearTimeout(audioLoop);
+
             var ryu = document.getElementById('ryu');
             var width = 156;
             ryu.style.position = 'absolute';
@@ -20,27 +223,26 @@
             var currLeft = 0 - width;
             var playTime = 0;
             ryu.style.left = `${currLeft}px`;
-            //ryu.style.left = `-100px`;
-
+            
             function move() {
                 currLeft += 20;
                 ryu.style.left = `${currLeft}px`;
 
                 if (currLeft >= window.innerWidth)
                     return;
-                setTimeout(move, 100);
+                videoLoop = setTimeout(move, 100);
             }
 
             function play() {
                 playTime++;
                 audio.play();
 
-                if (playTime > 3) return;
-                setTimeout(play, 2000);
+                if (playTime > 2) return;
+                audioLoop = setTimeout(play, 4000);
             }
 
-            setTimeout(play, 500);
-            move();
+            audioLoop = setTimeout(play, 500);
+            videoLoop = move();
         }, true)
 
     </script>
